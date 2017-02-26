@@ -1,0 +1,5 @@
+1.cd C:\Users\Administrator\show_mysql
+
+2.venv\Scripts\activate
+
+3.python hello.py

@@ -4,45 +4,38 @@
 <h1 style="vertical-align: bottom; display: inline-block;">How to Show SQL</h1>
 <div class="metanav">
 </div>
-<form action="{{ url_for('add_entry')}}" method="post" class="add-entry">
-    <label for="name">Name</label>
-    <input type="text" size="30" name="name" id="name"><br>
-    <label for="sex">Sex</label>
-    <select name="sex" id="sex">
-        <option value="Male">Male</option>
-        <option value="Fem">Female</option></select><br>
-    <label for="age">Age</label>
-    <input type="number" min="0" max="99" step="1" value="18" id="age" name="age" required><br>
-    <label for="tel">Tel</label>
-    <input type="text" size="30" name="tel" id="tel"><br>
-    <input type="submit" value="Add">
+<form action="{{ url_for('select_entry')}}" method="post" class="add-entry">
+    <label for="workcode">Workcode</label>
+    <input type="text" size="30" name="workcode" id="workcode"><br>
+    <label for="metastatus">Metastatus</label>
+    <select name="metastatus" id="metastatus ">
+        <option value="0">0</option>
+        <option value="1">1</option></select><br>
+    <input type="submit" value="Select">
 </form>
 <form action="{{ url_for('show_entries')}}" method="post">
     <input type="submit" value="Show">
 </form>
+{% if select_records %}
+<p> {{select_records}}</p>
+{% endif %}
 {% if cursor %}
 <table border="1">
 <thead>
-<td>id</td>
-<td>name</td>
-<td>sex</td>
-<td>age</td>
-<td>tel</td>
+{% for field in field_names %}
+<td> {{field}} </td>
+{% endfor %}
 </thead>
     {% for item in cursor.fetchall() %}
     <tr>
-       <td>{{item[0]}}</td>
-        <td>{{item[1]}}</td>
-        <td>{{item[2]}}</td>
-        <td>{{item[3]}}</td>
-        <td>{{item[4]}}</td>
+        {% for i in range(len(field_names)) %}
+            <td>{{item[i]}}</td>
+        {% endfor %}
     </tr>
     {% endfor %}
 </table>
 {% endif %}
-{% if insert_record %}
-<p> {{insert_record}}</p>
-{% endif %}
+
 <!--ul class="entries">
     {% for entry in entries %}
     <li><h2>{{ entry}}</h2></li>

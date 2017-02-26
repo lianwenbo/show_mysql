@@ -8,15 +8,20 @@ app = Flask(
     static_folder='static',
     template_folder='templates'
 )
-app.config['MYSQL_DATABASE_USER'] = 'lianwenbo'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123456'
-app.config['MYSQL_DATABASE_DB'] = 'transport'
+app.config['MYSQL_DATABASE_USER'] = 'XXX'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'XXXX'
+app.config['MYSQL_DATABASE_DB'] = 'XXXX'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.jinja_env.globals.update(len=len)
 mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-entries = []
+field_names = ['id', 'workcode', 'metastatus']
+all_fields = map(lambda x:x.strip(),
+                 open('field.conf',
+                      'r').readline().strip().split(',')
+                 )
 
 
 @app.route('/')
@@ -25,37 +30,28 @@ def index():
     return tmpl('index.html')
 
 
-@app.route('/add_entry', methods=['POST'])
-def add_entry():
-    name_list = []
-    value_list = []
-    name_fmt = []
-    if request.form['name']:
-        name_list.append('name')
-        value_list.append('\'' + request.form['name'] + '\'')
-        name_fmt.append('%s')
-    if request.form['sex']:
-        name_list.append('sex')
-        value_list.append('\'' + request.form['sex'] + '\'')
-        name_fmt.append('%s')
-    if request.form['age']:
-        name_list.append('age')
-        value_list.append(str(int(request.form['age'])))
-        name_fmt.append('%s')
-    if request.form['tel']:
-        name_list.append('tel')
-        value_list.append(str(int(request.form['tel'])))
-        name_fmt.append('%s')
-    name_fmt = '(' + ','.join(name_fmt) + ')'
-    names = tuple(name_list)
-    values = tuple(value_list)
-    insert_record = 'insert into students ' +\
-                    (name_fmt % names) + 'values ' + (name_fmt % values)
-    cursor.execute(insert_record)
-    return tmpl('index.html', insert_record=(insert_record + ' OK'))
+@app.route('/select_entry', methods=['POST'])
+def select_entry():
+    conds = []
+    if request.form['workcode']:
+        cond = 'workcode=\'%s\'' % request.form['workcode']
+        conds.append(cond)
+    if request.form['metastatus']:
+        cond = 'metastatus=%s' % request.form['metastatus']
+        conds.append(cond)
+    select_records = 'select * from data '
+    if conds:
+        select_records += 'where ' + 'and '.join(conds)
+    import sys
+    print >>sys.stderr, 'select records:', select_records
+    cursor.execute(select_records)
+    return tmpl('index.html', cursor=cursor,
+                field_names=all_fields)
 
 
 @app.route('/show_entries', methods=['POST'])
 def show_entries():
-    cursor.execute('select * from students')
-    return tmpl('index.html', cursor=cursor)
+    field_tuple_str =  ','.join(all_fields)
+    select_cmd = 'select %s from data limit 100' % field_tuple_str
+    cursor.execute(select_cmd)
+    return tmpl('index.html', cursor=cursor, field_names=all_fields)
