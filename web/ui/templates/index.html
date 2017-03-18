@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
-
-{% block body %}
-<h1 style="vertical-align: bottom; display: inline-block;">How to Show SQL</h1>
+{% block title %}
+包裹查询系统
+{% endblock %}
+{% block page_content %}
+<h1 style="vertical-align: bottom; display: inline-block;">How to Show SQLA</h1>
 <div class="metanav">
 </div>
 <form action="{{ url_for('select_entry')}}" method="post" class="add-entry">
@@ -35,13 +37,4 @@
     {% endfor %}
 </table>
 {% endif %}
-
-<!--ul class="entries">
-    {% for entry in entries %}
-    <li><h2>{{ entry}}</h2></li>
-    {% endfor %}
-    {% if data %}
-    <li><h2>{{data}}</h2></li>
-    {% endif %}
-</ul-->
 {% endblock %}

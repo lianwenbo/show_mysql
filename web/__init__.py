@@ -6,7 +6,8 @@ _apps = {}
 
 
 def run(app, port):
-    server = WSGIServer(('101.37.30.109', port), app)
+    #server = WSGIServer(('101.37.30.109', port), app)
+    server = WSGIServer(('', port), app)
     if port not in _apps:
         _apps[port] = server
     server.serve_forever()

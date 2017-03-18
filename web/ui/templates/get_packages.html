@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block title %}
+已到达大包
+{% endblock %}
+
+{% block page_content %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>Lian</th>
+        <th>Wenbo</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>hello</td>
+            <td>
+                <a href={{ "detail_package.html?id=%s" % id}}>detail</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
