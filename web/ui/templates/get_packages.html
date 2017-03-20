@@ -4,20 +4,29 @@
 {% endblock %}
 
 {% block page_content %}
-<table class="table">
-    <thead>
-    <tr>
-        <th>Lian</th>
-        <th>Wenbo</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>hello</td>
-            <td>
-                <a href={{ "detail_package.html?id=%s" % id}}>detail</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="container">
+    <div class="row">
+        {% if schema %}
+        <table class="table">
+            <thead>
+            <tr>
+                {% for key in cols%}
+                <td>{{schema[key]}}</td>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for record in cursor.fetchall() %}
+            <tr>
+                {% for i in range(len(record) -1 ) %}
+                <td>{{ record[i] }}</td>
+                {% endfor %}
+                <td><a href='detail_package.html?filetime={{record[2]}}&nameid={{record[0]}}&metatxtid={{record[1]}}&receivercity={{record[3]}}&n={{record[4]}}'>{{record[4]}}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

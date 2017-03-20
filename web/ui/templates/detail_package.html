@@ -1,8 +1,99 @@
 {% extends 'layout.html' %}
 {% block title %}
-detail package {{ id}}
+detail package
 {% endblock %}
 
 {% block page_content %}
-Hello {{ id }}
+<div class="container">
+    <div class="row">
+        <ul class="breadcrumb">
+            <li><a href="get_packages.html">已到达大包</a></li>
+            <li class="active">大包查询结果</li>
+        </ul>
+    </div>
+    <div class="row">
+        <label>已到达雅典大包：</label>
+        <label>{{label_args['nameid']}}</label>
+        <br>
+        <label>清单号：</label>
+        <label>{{label_args['metatxtid']}}</label>
+        <br>
+        <label>到达雅典时间：</label>
+        <label>{{label_args['filetime']}}</label>
+        <br>
+        <label>目的国：</label>
+        <label>{{label_args['receivercity']}}</label>
+        <br>
+        <label>包裹数：</label>
+        <label>{{label_args['n']}}</label>
+        <br>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>仅显示件数大于0的重量</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>包裹重量(克)</td>
+                        <td>件数</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for weight in not_empty %}
+                        <tr>
+                            <td>{{weight}}</td>
+                            <td>{{not_empty[weight]}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <label>按100克显示</label>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>包裹重量(克)</td>
+                        <td>件数</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for weight in range(0, 2100, 100) %}
+                        <tr>
+                            <td>{{weight}}</td>
+                            {% if weight in by_100_map %}
+                                <td>{{by_100_map[weight]}}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <label>按10克显示</label>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>包裹重量(克)</td>
+                    <td>件数</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for weight in range(0, 2010, 10) %}
+                <tr>
+                    <td>{{weight}}</td>
+                    {% if weight in by_10_map %}
+                    <td>{{by_10_map[weight]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

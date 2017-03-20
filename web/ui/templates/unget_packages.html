@@ -4,5 +4,29 @@
 {% endblock %}
 
 {% block page_content %}
-Hello 未到达大包
+<div class="container">
+    <div class="row">
+        {% if schema %}
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for key in cols%}
+                        <td>{{schema[key]}}</td>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in cursor.fetchall() %}
+                    <tr>
+                        {% for i in range(len(record)) %}
+                            <td>{{ record[i] }}</td>
+                        {% endfor %}
+                        <td><a href="docs/{{record[1]}}.pdf">下载</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

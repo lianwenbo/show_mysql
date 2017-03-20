@@ -1,0 +1,37 @@
+user: xxx
+password: xxx
+database: xxx
+host: xxx
+
+unget_schema:
+  metatxtid: 清单号
+  metaxlsid: 大包号
+  filetime: 上传雅典时间
+  data: 航空提单
+
+unget_columns:
+- metaxlsid
+- metatxtid
+- filetime
+- data
+
+unget_package_sql: 'SELECT metaxlsid, metatxtid, filetime from ( SELECT distinct metatxtid, metaxlsid, metaxlsname FROM lr_v9_lr_data  WHERE metastatus=0 ) AS D inner join lr_v9_lr_resource AS R where R.name=D.metaxlsname AND R.type=0 AND R.status=1 order by filetime DESC'
+download_pdf_sql: "select data from lr_v9_lr_resource where name='%s'"
+
+get_schema:
+  nameid: 大包号
+  metatxtid: 清单号
+  filetime: 到达雅典时间
+  receivercity: 目的国
+  n: 包裹数
+
+get_columns:
+- nameid
+- metatxtid
+- filetime
+- receivercity
+- n
+
+get_package_sql: 'SELECT nameid, metatxtid, filetime, receivercity, n from ( SELECT metatxtid, metaxlsid, metaxlsname, receivercity, count(*) AS n FROM lr_v9_lr_data WHERE metastatus=1 GROUP BY metatxtid, metaxlsid, metaxlsname, receivercity) AS D inner join lr_v9_lr_resource AS R where R.name=D.metaxlsname AND R.type=0 AND R.status=1 order by filetime DESC'
+
+get_detail_sql: 'select netweight from lr_v9_lr_data where metatxtid=%s and metaxlsid="%s" and metastatus=1'
